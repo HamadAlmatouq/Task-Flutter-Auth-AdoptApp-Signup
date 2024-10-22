@@ -29,12 +29,12 @@ class HomePage extends StatelessWidget {
                 context.push('/signup');
               },
             ),
-            DrawerHeader(
-              child: Text("Sign in please"),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-            )
+            // DrawerHeader(
+            //   child: Text("Sign in please"),
+            //   decoration: BoxDecoration(
+            //     color: Colors.blue,
+            //   ),
+            //   )
           ],
         ),
       ),
