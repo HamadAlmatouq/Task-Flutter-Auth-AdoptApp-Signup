@@ -1,5 +1,6 @@
 import 'package:adopt_app/pages/add_page.dart';
 import 'package:adopt_app/pages/home_page.dart';
+import 'package:adopt_app/pages/signin_page.dart';
 import 'package:adopt_app/pages/signup_page.dart';
 import 'package:adopt_app/pages/update_page.dart';
 import 'package:adopt_app/providers/auth_provider.dart';
@@ -43,16 +44,20 @@ class MyApp extends StatelessWidget {
         builder: (context, state) => AddPage(),
       ),
       GoRoute(
-        path: '/signup',
-        builder: (context, state) => SignupPage(),
-      ),
-      GoRoute(
         path: '/update/:petId',
         builder: (context, state) {
           final pet = Provider.of<PetsProvider>(context).pets.firstWhere(
               (pet) => pet.id.toString() == (state.pathParameters['petId']!));
           return UpdatePage(pet: pet);
         },
+      ),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) => SignupPage(),
+      ),
+      GoRoute(
+        path: '/signin',
+        builder: (context, state) => SigninPage(),
       ),
     ],
   );

@@ -1,3 +1,4 @@
+import 'package:adopt_app/providers/auth_provider.dart';
 import 'package:adopt_app/providers/pets_provider.dart';
 import 'package:adopt_app/widgets/pet_card.dart';
 import 'package:flutter/material.dart';
@@ -13,29 +14,49 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Pet Adopt"),
       ),
+
+      // Drawer
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            ListTile(
-              title: Text("Sign in"),
-              trailing: Icon(Icons.login),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text("Sign up"),
-              trailing: Icon(Icons.how_to_reg),
-              onTap: () {
-                context.push('/signup');
-              },
-            ),
-            // DrawerHeader(
-            //   child: Text("Sign in please"),
-            //   decoration: BoxDecoration(
-            //     color: Colors.blue,
-            //   ),
-            //   )
-          ],
+        child: FutureBuilder(
+          future: context.read<AuthProvider>().initilaizeAuth(),
+          builder: (context, dataSnapshot) => Consumer<AuthProvider>(
+            builder: (context, authProvider, _) => authProvider.isAuth
+                ? ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      DrawerHeader(
+                        decoration: const BoxDecoration(color: Colors.blue),
+                        child: Text("Welcome ${authProvider.user.username}"),
+                      ),
+                      ListTile(
+                        title: const Text("Logout"),
+                        trailing: const Icon(Icons.logout),
+                        onTap: () {
+                          authProvider.logout();
+                        },
+                      ),
+                    ],
+                  )
+                : ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      ListTile(
+                        title: const Text("Sign in"),
+                        trailing: const Icon(Icons.login),
+                        onTap: () {
+                          context.push('/signin');
+                        },
+                      ),
+                      ListTile(
+                        title: const Text("Sign up"),
+                        trailing: const Icon(Icons.how_to_reg),
+                        onTap: () {
+                          context.push('/signup');
+                        },
+                      ),
+                    ],
+                  ),
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -71,19 +92,17 @@ class HomePage extends StatelessWidget {
                     return Consumer<PetsProvider>(
                       builder: (context, petsProvider, child) =>
                           GridView.builder(
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio:
-                                    MediaQuery.of(context).size.width /
-                                        (MediaQuery.of(context).size.height),
-                              ),
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // <- Here
-                              itemCount: petsProvider.pets.length,
-                              itemBuilder: (context, index) =>
-                                  PetCard(pet: petsProvider.pets[index])),
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: MediaQuery.of(context).size.width /
+                              (MediaQuery.of(context).size.height),
+                        ),
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: petsProvider.pets.length,
+                        itemBuilder: (context, index) =>
+                            PetCard(pet: petsProvider.pets[index]),
+                      ),
                     );
                   }
                 }
